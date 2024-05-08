@@ -98,7 +98,7 @@ app.post("/login", async (req, res) => {
           })
         } else {
         res
-          .status(500)
+          .status(401)
           .send({
             error: true,
             message: 'pw yang anda masukkan salah!'
