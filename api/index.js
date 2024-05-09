@@ -77,12 +77,12 @@ app.post("/login", async (req, res) => {
   const existValidation = await validation.isExist(db, req);
 
   if (emptyValidation) {
-    res.status(500).send({
+    res.status(200).send({
       error: true,
       message: "id tidak boleh kosong!",
     });
   } else if (!existValidation) {
-    res.status(500).send({
+    res.status(200).send({
       error: true,
       message: "id belum terdaftar, silahkan register!",
     });
@@ -103,22 +103,12 @@ app.post("/login", async (req, res) => {
           })
         } else {
         res
-          .status(401)
+          .status(200)
           .send({
             error: true,
             message: 'pw yang anda masukkan salah!'
           })
       }
-
-      // const pwCompare = await bcrypt.compare(rawPW, )
-
-    
-
-      // await db.from("users").insert({ id, pw });
-      // res.status(200).send({
-      //   error: false,
-      //   message: "registrasi berhasil, silahkan login!",
-      // });
     } catch {
       res.status(500).send({
         error: true,
