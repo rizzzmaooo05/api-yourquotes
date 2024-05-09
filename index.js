@@ -1,15 +1,16 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import "dotenv/config";
-import database from "../src/libs/database.js";
-import validation from "../src/libs/validation.js";
+import database from "./src/libs/database.js";
+import validation from "./src/libs/validation.js";
 import bodyParser from 'body-parser'
 
 const app = express();
+const urlEncodedParser = bodyParser.urlencoded({extended: false})
+
 app.use(express.static('public'));
 app.use(express.json())
 
-const urlEncodedParser = bodyParser.urlencoded({extended: false})
 
 const db = database();
 
@@ -17,7 +18,7 @@ app.get("/", async (req, res) => {
   res.send("API Running");
 });
 
-app.post("/register", urlEncodedParser, async (req, res) => {
+app.post("/register", urlEncodedParser ,async (req, res) => {
   const emptyValidation = validation.isEmpty(req.body.id);
   const lowerCasevalidation = validation.isLowerCase(req.body.id);
   const alphaNumericvalidation = validation.isAlphaNumeric(req.body.id);
