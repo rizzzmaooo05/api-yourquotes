@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import "dotenv/config";
-import database from "./src/libs/database.js";
-import validation from "./src/libs/validation.js";
+import database from "../src/libs/database.js";
+import validation from "../src/libs/validation.js";
 
 const app = express();
 app.use(express.json());
