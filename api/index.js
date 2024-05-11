@@ -45,100 +45,91 @@ app.get("/users", usersAuthorization, async (req, res) => {
 app.post("/register", async (req, res) => {
   const usersDB = await db.from("users");
   const usersPasswordDB = await db.from("users_password");
-
-  try {
-    //  VALIDATION ID
-    const idEmptyValidation = validation.isEmpty(req.body.id);
-    const idLowerCasevalidation = validation.isLowerCase(req.body.id);
-    const idAlphaNumericvalidation = validation.isAlphaNumeric(req.body.id);
-    const idExistValidation = await validation.isIDExist(usersDB, req);
-
-    if (idEmptyValidation) {
-      const response = apiResponse(true, "ID tidak boleh kosong!", [], "");
-      res.status(500).send(response);
-    } else if (!idLowerCasevalidation) {
-      const response = apiResponse(
-        true,
-        "ID hanya boleh menggunakan lowercase!",
-        [],
-        ""
-      );
-      res.status(500).send(response);
-    } else if (!idAlphaNumericvalidation) {
-      const response = apiResponse(
-        true,
-        "ID hanya boleh menggunakan alphabet (a-z) dan numeric (0-9)!",
-        [],
-        ""
-      );
-      res.status(500).send(response);
-    } else if (idExistValidation) {
-      const response = apiResponse(
-        true,
-        "ID telah terdaftar, silahkan login!",
-        [],
-        ""
-      );
-      res.status(500).send(response);
-    }
-
-    // VALIDATION NAMA DEPAN
-    const namaDepanEmptyValidation = validation.isEmpty(req.body.nama_depan);
-
-    if (namaDepanEmptyValidation) {
-      const response = apiResponse(true, "Nama depan wajib diisi!", [], "");
-      res.status(500).send(response);
-    }
-
-    // VALIDATION PASSWORD
-
-    const eightCharMinValidation = validation.isEightCharMin(req.body.pw);
-
-    if (!eightCharMinValidation) {
-      const response = apiResponse(
-        true,
-        "Password minimal 8 karakter!",
-        [],
-        ""
-      );
-      res.status(500).send(response);
-    }
-
-    // INSERT DATA TO DATABASE
-
-    // ID, NAMA DEPAN, NAMA BELAKANG
-    await usersDB.insert({
-      id: req.body.id,
-      nama_depan: req.body.nama_depan,
-      nama_belakang: req.body.nama_belakang,
-    });
-
-    // PASSWORD
-
-    const salt = await bcrypt.genSalt();
-    const pw = await bcrypt.hash(req.body.pw, salt);
-
-    await usersPasswordDB.insert({
-      id_user: req.body.id,
-      password: pw,
-    });
-
-    const response = apiResponse(
-      false,
-      "Registrasi berhasil, silahkan login!",
-      [],
-      ""
-    );
-    res.status(200).send(response);
-  } catch {
+  
+  const idEmptyValidation = validation.isEmpty(req.body.id);
+  const idLowerCasevalidation = validation.isLowerCase(req.body.id);
+  const idAlphaNumericvalidation = validation.isAlphaNumeric(req.body.id);
+  const idExistValidation = await validation.isIDExist(usersDB, req);
+  const namaDepanEmptyValidation = validation.isEmpty(req.body.nama_depan);
+  const pwEightCharMinValidation = validation.isEightCharMin(req.body.pw);
+  
+  if (idEmptyValidation) {
+    const response = apiResponse(true, "ID tidak boleh kosong!", [], "");
+    res.status(500).send(response);
+  } else if (!idLowerCasevalidation) {
     const response = apiResponse(
       true,
-      "Registrasi gagal, silahkan coba lagi nanti!",
+      "ID hanya boleh menggunakan lowercase!",
       [],
       ""
     );
     res.status(500).send(response);
+  } else if (!idAlphaNumericvalidation) {
+    const response = apiResponse(
+      true,
+      "ID hanya boleh menggunakan alphabet (a-z) dan numeric (0-9)!",
+      [],
+      ""
+    );
+    res.status(500).send(response);
+  } else if (idExistValidation) {
+    const response = apiResponse(
+      true,
+      "ID telah terdaftar, silahkan login!",
+      [],
+      ""
+    );
+    res.status(500).send(response);
+  } else if (namaDepanEmptyValidation) {
+    const response = apiResponse(true,
+      "Nama depan wajib diisi!",
+      [],
+      "");
+    res.status(500).send(response);
+  } else if (!pwEightCharMinValidation) {
+    const response = apiResponse(true,
+      "Password minimal 8 karakter!",
+      [],
+      "");
+    res.status(500).send(response);
+  } else {
+    try {
+      const insertToUsersDB = await usersDB.insert({
+        id: req.body.id,
+        nama_depan: req.body.nama_depan,
+        nama_belakang: req.body.nama_belakang,
+      });
+    
+    
+      const salt = await bcrypt.genSalt();
+      const pw = await bcrypt.hash(req.body.pw, salt);
+    
+      const insertToUsersPasswordDB = await usersPasswordDB.insert({
+        id_user: req.body.id,
+        password: pw,
+      });
+    
+      console.log(insertToUsersDB)
+      console.log(insertToUsersPasswordDB)
+
+      const response = apiResponse(
+        false,
+        "Registrasi berhasil, silahkan login!",
+        [],
+        ""
+      );
+      res.status(200).send(response);
+    } catch {
+      const response = apiResponse(
+        true,
+        "Registrasi gagal, silahkan coba lagi nanti!",
+        [],
+        ""
+      );
+      res.status(500).send(response);
+    }
   }
+
 });
 
 app.post("/login", async (req, res) => {
