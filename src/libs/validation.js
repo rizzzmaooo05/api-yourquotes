@@ -6,11 +6,13 @@ const isLowerCase = str => str === str.toLowerCase()
 
 const isEightCharMin = str => str.length >= 8
 
-const isExist = async (db, req) => {
-  const user = await db.from("users").select().eq("id", req.body.id)
+const isIDExist = async (usersDB, req) => {
+  const user = await usersDB.select().eq("id", req.body.id)
 
   try {
-    if(user.data[0].id) return true
+    if(user.data[0].id) {
+      return true
+    }
   } catch {
     return false
   }
@@ -21,7 +23,7 @@ const validation = {
   isLowerCase,
   isAlphaNumeric,
   isEightCharMin,
-  isExist
+  isIDExist
 }
 
 export default validation
