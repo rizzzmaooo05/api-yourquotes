@@ -94,7 +94,7 @@ app.post("/register", async (req, res) => {
     res.status(500).send(response);
   } else {
     try {
-      const insertToUsersDB = await usersDB.insert({
+      await usersDB.insert({
         id: req.body.id,
         nama_depan: req.body.nama_depan,
         nama_belakang: req.body.nama_belakang,
@@ -104,13 +104,10 @@ app.post("/register", async (req, res) => {
       const salt = await bcrypt.genSalt();
       const pw = await bcrypt.hash(req.body.pw, salt);
     
-      const insertToUsersPasswordDB = await usersPasswordDB.insert({
+      await usersPasswordDB.insert({
         id_user: req.body.id,
         password: pw,
       });
-    
-      console.log(insertToUsersDB)
-      console.log(insertToUsersPasswordDB)
 
       const response = apiResponse(
         false,
