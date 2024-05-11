@@ -1,14 +1,12 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import bodyParser from 'body-parser'
 import "dotenv/config";
 import database from "../src/libs/database.js";
 import validation from "../src/libs/validation.js";
 import apiResponse from "../src/components/apiResponse.js";
 
 const app = express();
-const urlEncodedParser = bodyParser.urlencoded({extended: false})
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -44,7 +42,7 @@ app.get("/users", usersAuthorization, async (req, res) => {
   res.status(200).send(usersData);
 });
 
-app.post("/register", urlEncodedParser, async (req, res) => {
+app.post("/register", async (req, res) => {
   const usersDB = await db.from("users");
   const usersPasswordDB = await db.from("users_password");
 
