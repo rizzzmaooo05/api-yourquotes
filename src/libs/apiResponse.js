@@ -1,8 +1,7 @@
-const apiResponse = (error, message, data, token) => {
+const apiResponse = (error, message, token) => {
   return {
     error,
     message,
-    data,
     token
   }
 }
