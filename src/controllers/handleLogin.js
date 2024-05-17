@@ -9,7 +9,6 @@ import apiResponse from '../libs/apiResponse.js';
 const handleLogin = async (req, res) => {
   const { userId, passWord } = req.body
 
-<<<<<<< HEAD
   const idEmptyValidation = validation.isEmpty(userId);
   const idExistValidation = await validation.isIDExist(userId);
 
@@ -66,11 +65,9 @@ const handleLogin = async (req, res) => {
           .status(200)
           .cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
-            secure: true
+            maxAge: 24 * 60 * 60 * 1000
           })
           .send(response);
-
       }
       
       else {
@@ -96,9 +93,6 @@ const handleLogin = async (req, res) => {
         .send(response);
     }
   }
-=======
-  res.send(userId+passWord) 
->>>>>>> 98e3a0a9208b8fad0902eb72f4cf4d6053e925ad
 }
 
 export default handleLogin
