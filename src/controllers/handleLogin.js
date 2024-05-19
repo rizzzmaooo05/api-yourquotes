@@ -6,9 +6,9 @@ import validation from "../libs/validation.js";
 import models from "../models/models.js";
 import apiResponse from '../libs/apiResponse.js';
 
-const handleLogin = async (req, res) => {
-  const { userId, passWord } = req.body
-  res.json({userId, passWord})
+const handleLogin = (req, res) => {
+  // const { userId, passWord } = req.body
+  res.json(req.body)
 
   // const idEmptyValidation = validation.isEmpty(userId);
   // const idExistValidation = await validation.isIDExist(userId);
