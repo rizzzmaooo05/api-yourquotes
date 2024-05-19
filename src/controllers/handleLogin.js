@@ -8,7 +8,7 @@ import apiResponse from '../libs/apiResponse.js';
 
 const handleLogin = async (req, res) => {
   const { userId, passWord } = req.body
-  res.send({userId, passWord})
+  res.json({userId, passWord})
 
   // const idEmptyValidation = validation.isEmpty(userId);
   // const idExistValidation = await validation.isIDExist(userId);
