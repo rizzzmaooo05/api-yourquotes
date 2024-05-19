@@ -5,12 +5,12 @@ import apiResponse from '../libs/apiResponse.js'
 import models from '../models/models.js'
 
 const handleGetNewAccessToken = async (req, res) => {
-  const { refreshToken } = req.cookies
-  const refreshTokenDB = (await models.getUserByRefreshToken(refreshToken)).data[0]?.refresh_token
+  const refreshToken = req?.cookies?.refreshToken
+  const refreshTokenDB = (await models.getUserByRefreshToken(refreshToken))?.data[0]?.refresh_token
   const refreshTokenSecretKey = process.env.JWT_REFRESH_TOKEN_SECRET_KEY
   
   try {
-    if(refreshToken == refreshTokenDB) {
+    if (refreshToken == refreshTokenDB) {
       const verify = jwt.verify(refreshToken, refreshTokenSecretKey)
   
       const payLoad = {
@@ -30,12 +30,23 @@ const handleGetNewAccessToken = async (req, res) => {
         .status(200)
         .send(response)
     }
+
+    else {
+      const response = apiResponse(
+        true,
+        'Access Token baru gagal dibuat, silahkan login ulang!',
+        ''
+      )
+      res
+        .status(400)
+        .send(response)
+    }
   }
 
   catch {
     const response = apiResponse(
       true,
-      'Access Token baru gagal dibuat!',
+      'Access Token baru gagal dibuat, silahkan login ulang!',
       ''
     )
     res

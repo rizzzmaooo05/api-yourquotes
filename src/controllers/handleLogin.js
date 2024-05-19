@@ -52,10 +52,19 @@ const handleLogin = async (req, res) => {
         const accessToken = jwt.sign(payLoad, accessTokenSecretKey, {expiresIn: 60})
 
         const refreshTokenSecretKey = process.env.JWT_REFRESH_TOKEN_SECRET_KEY
-        const refreshToken = jwt.sign(payLoad, refreshTokenSecretKey, {expiresIn: 60 * 60 * 24})
+        const refreshToken = jwt.sign(payLoad, refreshTokenSecretKey)
+        // models.insertUserRefreshToken(userId, refreshToken)
 
-        models.insertUserRefreshToken(userId, refreshToken)
+        const isUserRefreshTokenExist = (await models.getUserRefreshTokenById(userId)).data[0]
+        
+        if (isUserRefreshTokenExist) {
+          models.updateUserRefreshToken(refreshToken, userId)
+        }
 
+        else {
+          models.insertUserRefreshToken(userId, refreshToken)
+        }
+        // console.log(isUserRefreshTokenExist)
         const response = apiResponse(
           false,
           "login berhasil!",

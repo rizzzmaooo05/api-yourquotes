@@ -1,10 +1,12 @@
 import express from "express";
+import compression from "compression";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 
 import router from "../src/routes/router.js";
 
 const app = express();
+app.use(compression())
 app.use(express.json());
 app.use(cors())
 app.use(cookieParser())
